@@ -192,7 +192,7 @@ struct append_single<details::string_path_wrapper>
     static void op(sdbusplus::SdBusInterface* intf, sd_bus_message* m, S&& s)
     {
         constexpr auto dbusType = std::get<0>(types::type_id<S>());
-        intf->sd_bus_message_append_basic(m, dbusType, s.str.c_str());
+        intf->sd_bus_message_append_basic(m, dbusType, s);
     }
 };
 

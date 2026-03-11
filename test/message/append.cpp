@@ -221,7 +221,7 @@ TEST_F(AppendTest, RValueStringView)
 TEST_F(AppendTest, ObjectPath)
 {
     sdbusplus::message::object_path o{"/asdf"};
-    expect_basic_string(SD_BUS_TYPE_OBJECT_PATH, o.str.c_str());
+    expect_basic_string(SD_BUS_TYPE_OBJECT_PATH, o);
     new_message().append(o);
 }
 

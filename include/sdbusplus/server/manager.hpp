@@ -35,7 +35,7 @@ struct manager : private sdbusplus::bus::details::bus_friend
     static slot_t makeManager(SdBusInterface* intf, sd_bus* bus,
                               const sdbusplus::message::object_path& path)
     {
-        return makeManager(intf, bus, path.str.c_str());
+        return makeManager(intf, bus, path.operator const char*());
     }
 
   public:

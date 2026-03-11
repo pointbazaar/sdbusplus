@@ -83,6 +83,8 @@ struct string_wrapper
  *  alternative typename. */
 struct string_path_wrapper
 {
+    // NOTE: Reading or writing this member from user code is deprecated.
+    // Use the conversion functions instead whenever possible.
     std::string str;
 
     string_path_wrapper() = default;
@@ -112,6 +114,10 @@ struct string_path_wrapper
     {
         return std::move(str);
     }
+    operator const char*() const
+    {
+        return str.c_str();
+    }
 
     bool operator==(const string_path_wrapper& r) const
     {
@@ -137,6 +143,18 @@ struct string_path_wrapper
     {
         return str < r;
     }
+    bool operator==(const char* r) const
+    {
+        return str == std::string_view(r);
+    }
+    bool operator!=(const char* r) const
+    {
+        return str != std::string_view(r);
+    }
+    bool operator<(const char* r) const
+    {
+        return str < std::string_view(r);
+    }
 
     friend bool operator==(const std::string& l, const string_path_wrapper& r)
     {
@@ -149,6 +167,18 @@ struct string_path_wrapper
     friend bool operator<(const std::string& l, const string_path_wrapper& r)
     {
         return l < r.str;
+    }
+    friend bool operator==(const char* l, const string_path_wrapper& r)
+    {
+        return std::string_view(l) == r.str;
+    }
+    friend bool operator!=(const char* l, const string_path_wrapper& r)
+    {
+        return std::string_view(l) != r.str;
+    }
+    friend bool operator<(const char* l, const string_path_wrapper& r)
+    {
+        return std::string_view(l) < r.str;
     }
 
     std::string filename() const;
@@ -333,7 +363,7 @@ struct hash<sdbusplus::message::details::string_path_wrapper>
 
     result_type operator()(const argument_type& s) const
     {
-        return hash<std::string>()(s.str);
+        return hash<std::string>()(s);
     }
 };
 

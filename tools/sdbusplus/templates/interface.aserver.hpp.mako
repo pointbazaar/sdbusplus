@@ -69,7 +69,7 @@ class ${interface.classname} :
     ${interface.classname}(
         const sdbusplus::message::object_path& path,
         [[maybe_unused]] ${interface.classname}::properties_t props) :
-        ${interface.classname}(path.str.c_str(), props)
+        ${interface.classname}(path.operator const char*(), props)
     {}
 
 % for s in interface.signals:

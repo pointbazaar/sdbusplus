@@ -44,7 +44,7 @@ class ${interface.classname} :
             _sdbusplus_bus(bus) {}
 
         ${interface.classname}(bus_t& bus, const sdbusplus::message::object_path& path) :
-            ${interface.classname}(bus, path.str.c_str()) {}
+            ${interface.classname}(bus, path.operator const char*()) {}
 
     % if interface.properties:
         /** @brief Constructor to initialize the object from a map of
@@ -68,7 +68,7 @@ class ${interface.classname} :
         ${interface.classname}(bus_t& bus, const sdbusplus::message::object_path& path,
                      const std::map<std::string, PropertiesVariant>& vals,
                      bool skipSignal = false) :
-            ${interface.classname}(bus, path.str.c_str(), vals, skipSignal) {}
+            ${interface.classname}(bus, path.operator const char*(), vals, skipSignal) {}
 
     % endif
     % for m in interface.methods:
