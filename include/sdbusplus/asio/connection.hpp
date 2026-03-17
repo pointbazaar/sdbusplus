@@ -144,6 +144,18 @@ class connection : public sdbusplus::bus_t
         std::apply(handler, responseData);
     }
 
+    // @brief wrapper for async_method_call_timed that accepts object_path
+    template <typename MessageHandler, typename... InputArgs>
+    void async_method_call_timed(
+        MessageHandler&& handler, const std::string& service,
+        const sdbusplus::message::object_path& objpath,
+        const std::string& interf, const std::string& method, uint64_t timeout,
+        const InputArgs&... a)
+    {
+        async_method_call_timed(handler, service, objpath.str, interf, method,
+                                timeout, a...);
+    }
+
     /** @brief Perform an asynchronous method call, with input parameter packing
      *         and return value unpacking.
      *
@@ -190,6 +202,16 @@ class connection : public sdbusplus::bus_t
             return;
         }
         async_send(m, std::move(applyHandler), timeout);
+    }
+
+    // @brief wrapper for async_method_call that accept object_path
+    template <typename MessageHandler, typename... InputArgs>
+    void async_method_call(MessageHandler&& handler, const std::string& service,
+                           const sdbusplus::message::object_path& objpath,
+                           const std::string& interf, const std::string& method,
+                           InputArgs&&... a)
+    {
+        async_method_call(handler, service, objpath.str, interf, method, a...);
     }
 
     /** @brief Perform an asynchronous method call, with input parameter packing
@@ -241,6 +263,20 @@ class connection : public sdbusplus::bus_t
             return std::tuple<RetTypes...>{};
         }
     }
+
+    // @brief wrapper for yield_method_call that accepts object_path
+    template <typename... RetTypes, typename... InputArgs>
+    auto yield_method_call(boost::asio::yield_context yield,
+                           boost::system::error_code& ec,
+                           const std::string& service,
+                           const sdbusplus::message::object_path& objpath,
+                           const std::string& interf, const std::string& method,
+                           const InputArgs&... a)
+    {
+        return yield_method_call(yield, ec, service, objpath.str, interf,
+                                 method, a...);
+    }
+
     /** @brief Perform a yielding asynchronous method call, with input
      *         parameter packing and return value unpacking
      *

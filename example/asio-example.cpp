@@ -323,6 +323,10 @@ int client()
         }
     });
 
+    const std::string mapperBusName = "xyz.openbmc_project.ObjectMapper";
+    const sdbusplus::message::object_path mapperPath(
+        "/xyz/openbmc_project/object_mapper");
+
     conn->async_method_call(
         [](boost::system::error_code ec, GetSubTreeType& subtree) {
             std::cout << "async_method_call callback\n";
@@ -336,10 +340,8 @@ int client()
                 std::cout << item.first << "\n";
             }
         },
-        "xyz.openbmc_project.ObjectMapper",
-        "/xyz/openbmc_project/object_mapper",
-        "xyz.openbmc_project.ObjectMapper", "GetSubTree",
-        "/org/openbmc/control", 2, std::vector<std::string>());
+        mapperBusName, mapperPath, "xyz.openbmc_project.ObjectMapper",
+        "GetSubTree", "/org/openbmc/control", 2, std::vector<std::string>());
 
     std::string nonConstCapture = "lalalala";
     conn->async_method_call(
@@ -358,10 +360,8 @@ int client()
                 std::cerr << "async_method_call should have failed!\n";
             }
         },
-        "xyz.openbmc_project.ObjectMapper",
-        "/xyz/openbmc_project/object_mapper",
-        "xyz.openbmc_project.ObjectMapper", "GetSubTree",
-        "/xyz/openbmc_project/sensors", depth, interfaces);
+        mapperBusName, mapperPath, "xyz.openbmc_project.ObjectMapper",
+        "GetSubTree", "/xyz/openbmc_project/sensors", depth, interfaces);
 
     // sd_events work too using the default event loop
     sdbusplus::Timer t1([]() { std::cerr << "*** tock ***\n"; });
