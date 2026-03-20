@@ -33,7 +33,7 @@ interface::interface(sdbusplus::bus_t& bus, const char* path,
 {}
 
 interface::interface(sdbusplus::bus_t& bus,
-                     const sdbusplus::message::object_path& path,
+                     const sdbusplus::object_path& path,
                      const char* interf, const sdbusplus::vtable_t* vtable,
                      void* context) :
     interface(bus, path.str.c_str(), interf, vtable, context)
